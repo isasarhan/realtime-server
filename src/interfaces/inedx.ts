@@ -18,6 +18,7 @@ export interface IMessage {
     audioUrl?: string,
     fileUrl?: string,
     timestamp?: Date,
+    channelId?: ID,
 }
 export interface IUser {
     firstName: string,

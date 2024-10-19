@@ -14,16 +14,18 @@ const setupSocket = (server: http.Server) => {
 
     const userSocketMap = new Map()
 
-    const sendMessage = async (message: IMessage) => {
+    const sendMessage = async (message: IMessage) => {        
         const senderSocketId = userSocketMap.get(message.sender)
         const receiverSocketId = userSocketMap.get(message.receiver)
 
         const messageData = await messageService.createMessage(message)
 
+        const createdMessage = await messageService.createMessage(message)
+        console.log('createdMessage', createdMessage);
+        
         if (receiverSocketId && senderSocketId) {
             io.to(receiverSocketId).emit("receiveMessage", messageData)
         }
-        
     }
 
     io.on("connection", (socket) => {
