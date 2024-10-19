@@ -12,5 +12,5 @@ app.use(
     })
   )
 app.use(express.json())
-routes(app) 
+routes(app)
 export default app

@@ -1,39 +1,31 @@
 import http from 'http'
 import { Server as SocketIOServer } from 'socket.io'
-import { config } from './config/config.js'
-import { IMessage } from './interfaces/inedx.js'
 import messageService from './services/messageService.js'
+import { IMessage } from './interfaces/inedx.js'
 
 const setupSocket = (server: http.Server) => {
     const io = new SocketIOServer(server, {
         cors: {
-            origin: config.ORIGIN,
+            origin: 'http://localhost:3000', 
             methods: ["GET", "POST"],
             credentials: true,
         },
     })
 
     const userSocketMap = new Map()
-    const sendMessage = async (message: IMessage) => {
 
-        console.log('message');
-        
+    const sendMessage = async (message: IMessage) => {
         const senderSocketId = userSocketMap.get(message.sender)
         const receiverSocketId = userSocketMap.get(message.receiver)
-        console.log('senderSocketId', senderSocketId)
-        console.log('receiverSocketId', receiverSocketId)
-        
+
         const messageData = await messageService.createMessage(message)
-        console.log(messageData);
-        
+
         if (receiverSocketId && senderSocketId) {
             io.to(receiverSocketId).emit("receiveMessage", messageData)
         }
-    }
-    const testFn = ()=>{
-        console.log('test');
         
     }
+
     io.on("connection", (socket) => {
         const userId = socket.handshake.query.userId
 
@@ -45,8 +37,15 @@ const setupSocket = (server: http.Server) => {
         }
 
         socket.on("sendMessage", sendMessage)
-        socket.on("test", testFn)
 
+        socket.on("test", () => {
+            console.log('Test event received from client')
+        })
+
+        socket.on("disconnect", () => {
+            console.log(`User disconnected: ${userId} with socket ID: ${socket.id}`)
+            userSocketMap.delete(userId)
+        })
     })
 }
 
