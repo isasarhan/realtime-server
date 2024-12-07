@@ -44,6 +44,16 @@ class ChannelService {
         }
     }
 
+    async getAllChannels() {
+        try {
+            const channels = await this.repository.findAll()
+            return channels
+        } catch (error) {
+            isAppError(error)
+            throw new APIError(error)
+        }
+    }
+
     async getChannelById(id: string) {
         try {
             const channel = await this.repository.findById(id)
@@ -51,6 +61,16 @@ class ChannelService {
                 throw new NotFoundError(CHANNEL_NOT_FOUND)
 
             return channel
+        } catch (error) {
+            isAppError(error)
+            throw new APIError(error)
+        }
+    }
+   
+    async getChannelsByUserId(id: string) {
+        try {
+            const channels = await this.repository.findAllByUserId(id)
+            return channels
         } catch (error) {
             isAppError(error)
             throw new APIError(error)

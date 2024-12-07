@@ -6,8 +6,8 @@ export interface IChannel {
     admins: Schema.Types.ObjectId[]
     createdAt?: Date
     updatedAt?: Date
-    messages: Schema.Types.ObjectId[]
-    description?:string
+    messages?: Schema.Types.ObjectId[]
+    description?: string
 }
 
 export interface IMessage {
@@ -21,6 +21,7 @@ export interface IMessage {
     channelId?: ID,
 }
 export interface IUser {
+    _id: ID;
     firstName: string,
     lastName: string,
     email: string,

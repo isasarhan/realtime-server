@@ -6,26 +6,26 @@ import { IMessage } from './interfaces/inedx.js'
 const setupSocket = (server: http.Server) => {
     const io = new SocketIOServer(server, {
         cors: {
-            origin: 'http://localhost:3000', 
+            origin: 'http://localhost:3000',
             methods: ["GET", "POST"],
             credentials: true,
-        },
+        }
     })
 
     const userSocketMap = new Map()
 
-    const sendMessage = async (message: IMessage) => {        
+    const sendMessage = async (message: IMessage) => {
+        console.log('Message received 1');
         const senderSocketId = userSocketMap.get(message.sender)
         const receiverSocketId = userSocketMap.get(message.receiver)
 
-        const messageData = await messageService.createMessage(message)
-
-        const createdMessage = await messageService.createMessage(message)
-        console.log('createdMessage', createdMessage);
-        
-        if (receiverSocketId && senderSocketId) {
-            io.to(receiverSocketId).emit("receiveMessage", messageData)
+        if (senderSocketId) {
+            await messageService.createMessage(message)
+            io.to(receiverSocketId).emit("receiveMessage", message)
+            console.log('Message received');
         }
+
+
     }
 
     io.on("connection", (socket) => {
@@ -39,10 +39,6 @@ const setupSocket = (server: http.Server) => {
         }
 
         socket.on("sendMessage", sendMessage)
-
-        socket.on("test", () => {
-            console.log('Test event received from client')
-        })
 
         socket.on("disconnect", () => {
             console.log(`User disconnected: ${userId} with socket ID: ${socket.id}`)

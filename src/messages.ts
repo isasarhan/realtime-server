@@ -5,6 +5,7 @@ export const VALIDATION_ERROR = 'validation error'
 
 export const USER_NOT_FOUND = 'user not found!'
 export const MESSAGE_NOT_FOUND = 'message not found!'
+export const MESSAGES_NOT_FOUND = 'messages not found!'
 export const CHANNEL_NOT_FOUND = 'channel not found!'
 export const SENDER_NOT_FOUND = 'sender not found!'
 export const RECEIVER_NOT_FOUND = 'receiver not found!'

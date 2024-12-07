@@ -1,9 +1,17 @@
-import { Router } from 'express'
-import { addMessage, deleteMessage, getMessageById, updateMessage } from '../controllers/messageController.js'
+import { Router } from 'express';
+import { addMessage, deleteMessage, getMessageById, getMessages, updateMessage } from '../controllers/messageController.js';
+import { verifyToken } from '../middlewares/authMiddleware.js';
 
-const router = Router()
+const router = Router();
 
-router.route("/:id").get(getMessageById).post(updateMessage).delete(deleteMessage)
-router.route("/").post(addMessage)
+router.route('/:id')
+    .get(verifyToken, getMessageById)
+    .put(verifyToken, updateMessage)
+    .delete(verifyToken, deleteMessage);
 
-export default router
+router.route('/all/:id').get(verifyToken, getMessages)
+
+router.route('/')
+    .post(addMessage);
+    
+export default router;

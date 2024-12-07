@@ -2,7 +2,7 @@ import { ID, IMessage } from "../interfaces/inedx.js"
 import UserRepository from "../database/repositories/userRepository.js"
 import MessageRepository from "../database/repositories/messageRepository.js"
 import { APIError, isAppError, NotFoundError } from "../utilities/appError.js"
-import { MESSAGE_NOT_FOUND, RECEIVER_NOT_FOUND, SENDER_NOT_FOUND } from "../messages.js"
+import { MESSAGE_NOT_FOUND, MESSAGES_NOT_FOUND, RECEIVER_NOT_FOUND, SENDER_NOT_FOUND } from "../messages.js"
 
 class MessageService {
 
@@ -61,6 +61,18 @@ class MessageService {
                 throw new NotFoundError(MESSAGE_NOT_FOUND)
 
             return message
+        } catch (error) {
+            isAppError(error)
+            throw new APIError(error)
+        }
+    }
+
+    async getMessages(user1: ID, user2: ID) {
+        try {
+            const messages = await this.repository.findMessages(user1, user2)
+            if (!messages)
+                throw new NotFoundError(MESSAGES_NOT_FOUND)
+            return messages
         } catch (error) {
             isAppError(error)
             throw new APIError(error)

@@ -6,6 +6,20 @@ import { isValidId } from '../../utilities/isValidId.js'
 import { ValidationError } from '../../utilities/appError.js'
 import * as validation from '../../utilities/validations/messageValidations.js'
 
+export const getMessages = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const user1 = req.User;
+    const user2 = req.params.id;
+ 
+    if (!user1 || !user2) {
+        res.status(400).send("Both user IDs are required.");
+        return
+    }
+
+    const messages = await service.getMessages(user1._id, user2);
+    
+    res.status(200).json({ messages })
+    return;
+});
 export const getMessageById = asyncHandler(async (req: Request, res: Response) => {
     const id = req.params.id
     if (!isValidId(id))

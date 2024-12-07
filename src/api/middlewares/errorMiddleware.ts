@@ -4,12 +4,14 @@ import { config } from "../../config/config.js"
 
 
 export const notFound = (req: Request, res: Response, next: NextFunction) => {
-    const error = new Error(`Not Found - ${req.originalUrl}`)
-    res.status(404)
-    next(error)
+    const error = new Error(`Not Found - ${req.originalUrl}`);
+    res.status(404);
+    next(error); // This will trigger the error handler
 }
 
 export const errorHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
+    console.log('error handler', error);
+    
     if (error instanceof AppError)
         return res.status(error.status || 500).json({
             message: error.message,

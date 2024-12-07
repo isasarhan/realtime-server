@@ -15,6 +15,20 @@ export const getChannelById = asyncHandler(async (req: Request, res: Response) =
     res.json(channel)
 })
 
+export const getChannelByUserId = asyncHandler(async (req: Request, res: Response) => {
+    const id = req.params.id
+    if (!isValidId(id))
+        throw new ValidationError(INVALID_ID)
+
+    const channels = await service.getChannelsByUserId(id)
+    res.json(channels)
+})
+
+export const getAllChannels = asyncHandler(async (req: Request, res: Response) => {
+    const channel = await service.getAllChannels()
+    res.json(channel)
+})
+
 export const addChannel = asyncHandler(async (req: Request, res: Response) => {
     const userReq = req.body
     const { error } = validation.add.validate(userReq)

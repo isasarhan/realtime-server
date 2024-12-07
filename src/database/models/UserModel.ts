@@ -3,6 +3,7 @@ import { IUser } from '../../interfaces/inedx.js'
 import bcrypt from 'bcryptjs'
 
 export interface IUserDocument extends IUser, Document {
+    _id: Schema.Types.ObjectId;
     matchPassword(password: string): Promise<boolean>
 }
 
@@ -13,6 +14,7 @@ const userSchema = new Schema<IUserDocument>({
     password: { type: String, required: true },
     image: { type: String },
     color: { type: Number },
+    
 })
 
 userSchema.pre('save', async function (next) {

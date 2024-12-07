@@ -17,14 +17,14 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
     const { email, password } = req.body
-    console.log(req.body)
-    
+
     const user = await service.login(email, password)
     const token = generateToken(user._id)
-    
+
     res.status(200).json({
         token: token,
         user: {
+            _id: user._id,
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,

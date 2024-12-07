@@ -17,11 +17,21 @@ class ChannelRepository {
     }
 
     async findById(id: ID) {
-        return await Channel.findById(id).populate(['members', 'admins', 'messages'])
+        return await Channel.findById(id).populate({
+            path: "messages",
+            populate: {
+              path: "sender",
+              select: "firstName",
+            },
+          });
     }
 
     async findAll() {
         return await Channel.find()
+    }
+
+    async findAllByUserId(id: ID) {
+        return await Channel.find({ members: { $in: [id] } })
     }
 
 }
